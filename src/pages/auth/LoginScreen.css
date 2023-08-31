@@ -1,0 +1,51 @@
+.login {
+    padding-top: 65px;
+    display: flex;
+    justify-content: space-between;
+    height: 834px;
+    color: black;
+}
+
+.signup {
+    padding-top: 65px;
+    display: flex;
+    justify-content: space-between;
+    height: 1034px;
+    color: black;
+}
+
+.loginleft{
+    width: 40%;
+    
+}
+
+.loginright {
+    width: 60%;
+    padding-top: 100px;
+    display: inline-block;
+    text-align: left;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    justify-items: center;
+    padding-left: 200px;
+    padding-right: 200px;
+    
+    
+   
+}
+
+.loginright h1 {
+    margin-left: 150px;
+    margin-bottom: 30px;
+}
+
+.frmcontrol {
+    margin-bottom: 20px;
+}
+
+.loginbutt {
+    width: 70%;
+    margin-top: 10px;
+    margin-left: 15%;
+}

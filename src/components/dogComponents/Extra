@@ -1,0 +1,136 @@
+// DogSearch.tsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './DogSearch.css'
+import FormContainer from '../FormContainer/FormContainer';
+import {Form, Button, Row, Col} from 'react-bootstrap'
+
+const DogSearch: React.FC = () => {
+  // Define state variables for search parameters
+  const [breeds, setBreeds] = useState<string[]>([]);
+  const [zipCodes, setZipCodes] = useState<string[]>([]);
+  const [ageMin, setAgeMin] = useState<number | undefined>(undefined);
+  const [ageMax, setAgeMax] = useState<number | undefined>(undefined);
+
+  // Define state variables for search results
+  const [resultIds, setResultIds] = useState<string[]>([]);
+  const [totalResults, setTotalResults] = useState<number>(0);
+
+  // Define pagination state
+  const [pageSize, setPageSize] = useState<number>(25);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // Function to handle search
+  const handleSearch = async () => {
+    try {
+      // Construct the query parameters
+      const queryParams = {
+        breeds: breeds.join(','),
+        zipCodes: zipCodes.join(','),
+        ageMin: ageMin !== undefined ? ageMin.toString() : '',
+        ageMax: ageMax !== undefined ? ageMax.toString() : '',
+        size: pageSize.toString(),
+        from: ((currentPage - 1) * pageSize).toString(),
+      };
+
+      // Make the API request
+      const response = await axios.get('https://frontend-take-home-service.fetch.com/dogs/search', {
+        params: queryParams,
+        withCredentials: true, // Include credentials (cookies) with the request
+      });
+
+      if (response.status === 200) {
+        const { resultIds, total } = response.data;
+        setResultIds(resultIds);
+        setTotalResults(total);
+      } else {
+        console.error('Search failed. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred during search:', error);
+    }
+  };
+
+  // Function to handle pagination
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  useEffect(() => {
+    // Call the search function when any of the search parameters change
+    handleSearch();
+  }, [breeds, zipCodes, ageMin, ageMax, pageSize, currentPage]);
+
+  return (
+    <div className="search-container">
+        <Form onSubmit={handleSearch}>
+                <Form.Group controlId='name' className='frmgrp'>
+                        <Form.Label className='frmlog text-dark'>
+                            Breed
+                        </Form.Label>
+                        <Form.Control
+                            className='frmcontrol'
+                            placeholder='Enter your name'
+                            value={breeds}
+                            onChange={(e) => setBreeds(e.target.value)}
+                        >
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="numberInput">
+                    <Form.Label>zipCodes</Form.Label>
+                        <Form.Control
+                        type="number"
+                        placeholder="Enter a number"
+                        value={zipCodes}
+                        onChange={(e) => setZipCodes(e.target.value)}
+                        />
+                </Form.Group>
+                    <Form.Group controlId="numberInput">
+                    <Form.Label>Min Age</Form.Label>
+                        <Form.Control
+                        type="number"
+                        placeholder="Enter a number"
+                        value={ageMin}
+                        onChange={(e) => setAgeMin(e.target.value)}
+                        />
+                </Form.Group>
+                <Form.Group controlId="numberInput">
+                    <Form.Label>Max Age</Form.Label>
+                        <Form.Control
+                        type="number"
+                        placeholder="Enter a number"
+                        value={ageMax}
+                        onChange={(e) => setAgeMax(e.target.value)}
+                        />
+                </Form.Group>
+                    <Button type ='submit' variant = 'primary' className='btn btn-block btn-primary loginbutt'>
+                        Search
+                    </Button>
+                </Form>
+      </div>
+  );
+};
+
+//from DogList
+
+async function fetchBreeds() {
+    try {
+      const authToken = localStorage.getItem('authToken');
+
+      const response = await axios.get(
+        'https://frontend-take-home-service.fetch.com/dogs/breeds',
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        setBreeds(response.data);
+        console.log('API Response:', response.data);
+      } else {
+        console.error('Failed to fetch dog breeds. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred during fetch:', error);
+    }
+  }

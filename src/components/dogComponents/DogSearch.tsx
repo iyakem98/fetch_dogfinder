@@ -21,7 +21,7 @@ const DogSearch: React.FC<DogSearchProps> = ({ onFilterSort }) => {
     ageMax: undefined,
   });
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true); // Initially visible
 
   const handleSearch = () => {
     onFilterSort(searchParams);
@@ -40,50 +40,58 @@ const DogSearch: React.FC<DogSearchProps> = ({ onFilterSort }) => {
   };
 
   return (
-    <div>
-      <Button onClick={toggleVisibility} variant="primary">
+    <div className="dog-search-container">
+      <Button
+        onClick={toggleVisibility}
+        variant="primary"
+        className="filter-button"
+      >
         Filter
       </Button>
       {isVisible && (
-        <div className="search-container">
+        <div className="search-form">
           <Form onSubmit={handleSearch}>
             <FormGroup>
-              <FormLabel>Breed:</FormLabel>
+              <FormLabel className="form-label">Breed:</FormLabel>
               <FormControl
                 type="text"
                 name="breeds"
                 value={searchParams.breeds}
                 onChange={handleChange}
+                className="form-control"
               />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Zip Code:</FormLabel>
+              <FormLabel className="form-label">Zip Code:</FormLabel>
               <FormControl
                 type="text"
                 name="zipCodes"
                 value={searchParams.zipCodes}
                 onChange={handleChange}
+                className="form-control"
               />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Age Min:</FormLabel>
+              <FormLabel className="form-label">Age Min:</FormLabel>
               <FormControl
                 type="number"
                 name="ageMin"
                 value={searchParams.ageMin}
                 onChange={handleChange}
+                className="form-control"
               />
             </FormGroup>
             <FormGroup>
-              <FormLabel>Age Max:</FormLabel>
+              <FormLabel className="form-label">Age Max:</FormLabel>
               <FormControl
                 type="number"
                 name="ageMax"
                 value={searchParams.ageMax}
                 onChange={handleChange}
+                className="form-control"
               />
             </FormGroup>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" className="search-button">
               Search
             </Button>
           </Form>

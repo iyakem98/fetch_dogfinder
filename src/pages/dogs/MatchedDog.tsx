@@ -15,7 +15,8 @@ interface DogDetailsCardProps {
   dogId: string;
 }
 
-const DogDetailsCard: React.FC<DogDetailsCardProps> = ({ dogId }) => {
+
+const MatchedDog: React.FC<DogDetailsCardProps> = ({ dogId }) => {
   const [dogDetails, setDogDetails] = useState<Dog | null>(null);
 
   useEffect(() => {
@@ -67,5 +68,5 @@ const DogDetailsCard: React.FC<DogDetailsCardProps> = ({ dogId }) => {
   );
 };
 
-export default DogDetailsCard;
+export default MatchedDog;
 

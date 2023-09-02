@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 import DogCard from '../../components/dogComponents/DogCard';
 import DogSearch from '../../components/dogComponents/DogSearch';
+import './DogList.css'
 
 import MatchedDog from './MatchedDog'; 
 
@@ -74,20 +75,16 @@ const [filterCriteria, setFilterCriteria] = useState<DogSearchParams>({
         );
   
         if (response.status === 200) {
-          const { resultIds, total, next } = response.data;
-  
-          setTotalDogs(total);
-          setNextPageQuery(next);
-  
-          const dogIds: string[] = resultIds;
-          fetchDogDetails(dogIds);
+          const dogIds: string[] = response.data.resultIds;
+          setNextPageQuery(response.data.next);
+          fetchDogDetails(dogIds); // Call the function to fetch dog details
         } else {
-          console.error('Failed to fetch dog data. Status:', response.status);
+          console.error('Failed to fetch dog IDs. Status:', response.status);
         }
       } catch (error) {
         console.error('An error occurred during fetch:', error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Set loading to false when fetch is complete
       }
     }
 
@@ -100,13 +97,11 @@ const [filterCriteria, setFilterCriteria] = useState<DogSearchParams>({
             withCredentials: true,
           }
         );
-    
+  
         if (dogResponse.status === 200) {
           console.log('details fetched');
-          // Concatenate the new dogs to the existing list
-          const newDogs = dogs.concat(dogResponse.data);
-          console.log('Fetched dogs:', dogResponse.data);
-          setDogs(newDogs);
+          // Set the 'dogs' state directly with the new list of dogs
+          setDogs(dogResponse.data);
         } else {
           console.error('Failed to fetch dog details. Status:', dogResponse.status);
         }
@@ -209,12 +204,20 @@ const [filterCriteria, setFilterCriteria] = useState<DogSearchParams>({
 };
 
 const loadNextPage = () => {
-  console.log(currentPage)
   if (nextPageQuery) {
     setCurrentPage((prevPage) => prevPage + 1);
-    console.log(currentPage)
+    
   }
 };
+
+const loadPrevPage = () => {
+  if (nextPageQuery) {
+    setCurrentPage((prevPage) => prevPage - 1);
+    
+  }
+};
+
+
 
 
 
@@ -223,6 +226,7 @@ const loadNextPage = () => {
   return (
     <div>
       <h2>Dog Breeds</h2>
+      <h3>{currentPage}</h3>
       <div>
         <DogSearch onFilterSort={handleFilterSort} />
       </div>
@@ -245,6 +249,14 @@ const loadNextPage = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
+        <div>
+          <div className='pages'>
+       <Button className='bg-light text-dark' onClick={loadPrevPage}>Back</Button>
+       <p>
+        Current Page: {currentPage}
+       </p>
+      <Button className='bg-success' onClick={loadNextPage}>Go to Page {currentPage+1}</Button>
+      </div>
         <Container>
           <Row>
             {dogs.map((dog, index) => (
@@ -254,10 +266,16 @@ const loadNextPage = () => {
             ))}
           </Row>
         </Container>
-      )}
-       <div>
-      <Button className='bg-success' onClick={loadNextPage}>Load More</Button>
+        <div className='pages'>
+       <Button className='bg-light text-dark' onClick={loadPrevPage}>Back</Button>
+       <p>
+        Current Page: {currentPage}
+       </p>
+      <Button className='bg-success' onClick={loadNextPage}>Go to Page {currentPage+1}</Button>
       </div>
+        </div>
+      )}
+       
     </div>
   );
 };

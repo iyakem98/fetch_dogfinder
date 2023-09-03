@@ -23,7 +23,8 @@ const DogSearch: React.FC<DogSearchProps> = ({ onFilterSort }) => {
 
   const [isVisible, setIsVisible] = useState(true); // Initially visible
 
-  const handleSearch = () => {
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault(); 
     onFilterSort(searchParams);
   };
 
@@ -31,13 +32,27 @@ const DogSearch: React.FC<DogSearchProps> = ({ onFilterSort }) => {
     setIsVisible(!isVisible);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  // ...
+
+const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = event.target;
+
+  if (name === 'breeds' || name === 'zipCodes') {
+    // Split the input value by commas to create an array
+    setSearchParams({
+      ...searchParams,
+      [name]: value.split(',').map((item) => item.trim()), // Split by comma and trim whitespace
+    });
+  } else {
     setSearchParams({
       ...searchParams,
       [name]: value,
     });
-  };
+  }
+};
+
+// ...
+
 
   return (
     <div className="dog-search-container">

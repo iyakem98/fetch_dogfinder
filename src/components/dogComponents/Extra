@@ -133,4 +133,79 @@ async function fetchBreeds() {
     } catch (error) {
       console.error('An error occurred during fetch:', error);
     }
+    
+
+
+   /* const handleFilterSort = (searchParams: DogSearchParams) => {
+    // Filter and sort the dogs based on the criteria
+    const filteredAndSortedDogs = dogs
+      .filter((dog) => {
+        // Filter by breed (case-insensitive)
+        if (
+          searchParams.breeds.length > 0 &&
+          !searchParams.breeds.some((breed) =>
+            dog.breed.toLowerCase().includes(breed.toLowerCase())
+          )
+        ) {
+          return false;
+        }
+  
+        // Filter by zip code
+        if (
+          searchParams.zipCodes.length > 0 &&
+          !searchParams.zipCodes.includes(dog.zip_code)
+        ) {
+          return false;
+        }
+  
+        // Filter by age range
+        if (
+          (searchParams.ageMin !== undefined && dog.age < searchParams.ageMin) ||
+          (searchParams.ageMax !== undefined && dog.age > searchParams.ageMax)
+        ) {
+          return false;
+        }
+  
+        return true;
+      })
+      .sort((a, b) => {
+        const fieldA = (a as any)[sortField] || ''; // Use type assertion as any
+        const fieldB = (b as any)[sortField] || ''; // Use type assertion as any
+  
+        if (sortOrder === 'asc') {
+          return fieldA.localeCompare(fieldB);
+        } else {
+          return fieldB.localeCompare(fieldA);
+        }
+      });
+  
+    // Update the 'dogs' state with the filtered and sorted results
+    setDogs(filteredAndSortedDogs);
+  }; */
+
+  async function fetchFilteredDogs() {
+    try {
+      const response = await axios.get(
+        `https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}&size=${pageSize}&from=${(currentPage - 1) * pageSize}`,
+        {
+          withCredentials: true,
+          params: {
+            breeds: filterCriteria.breeds.join(','), // Convert the array to a comma-separated string
+            zipCodes: filterCriteria.zipCodes.join(','), // Convert the array to a comma-separated string
+            ageMin: filterCriteria.ageMin,
+            ageMax: filterCriteria.ageMax,
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        const dogIds: string[] = response.data.resultIds;
+        setTotalDogs(response.data.total);
+        fetchDogDetails(dogIds);
+      } else {
+        console.error('Failed to fetch filtered dogs. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred during fetch:', error);
+    }
   }

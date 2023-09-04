@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap';
+import './LocationFilter.css'
 
 interface LocationFilterParams {
   city: string;
@@ -56,44 +57,53 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onLocationFilterChange 
 };
 
   return (
-    <div>
-      <div>
+    <div className="location-filter-container">
+      {!isVisible && (
         <Button
           onClick={toggleVisibility}
           variant="primary"
           className="filter-button"
         >
-          Filter Loc
+          Filter By Location
         </Button>
-      </div>
+      )}
       {isVisible && (
         <div>
-          <Form onSubmit={handleSearch}>
-          <FormGroup>
-  <FormLabel className="form-label">City:</FormLabel>
-  <FormControl
-    type="text"
-    name="city"
-    value={locationParams.city}
-    //onChange={handleChange}
-    onChange={(e) => setLocationParams({ ...locationParams, city: e.target.value })}
-    className="form-control"
-  />
-</FormGroup>
-
-            <FormGroup>
-              <FormLabel className="form-label">State:</FormLabel>
-              <FormControl
-                type="text"
-                name="states"
-                value={locationParams.states}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </FormGroup>
-            {/* Add ZIP code input fields here if needed */}
-            <Button type="submit">Apply Location Filters</Button>
-          </Form>
+          <Button
+            onClick={toggleVisibility}
+            variant="primary"
+            className="filter-button bg-secondary"
+          >
+            Close Location Filter
+          </Button>
+          <div>
+            <Form onSubmit={handleSearch}>
+              <FormGroup>
+                <FormLabel className="form-label">City:</FormLabel>
+                <FormControl
+                  type="text"
+                  name="city"
+                  value={locationParams.city}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel className="form-label">State:</FormLabel>
+                <FormControl
+                  type="text"
+                  name="states"
+                  value={locationParams.states}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </FormGroup>
+              {/* Add ZIP code input fields here if needed */}
+              <Button type="submit" className="filter-button">
+                Apply Location Filters
+              </Button>
+            </Form>
+          </div>
         </div>
       )}
     </div>

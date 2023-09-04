@@ -295,44 +295,50 @@ const DogList: React.FC = () => {
 
 
   return (
-    <div>
-      <h2>Dog Breeds</h2>
-      <h3>{currentPage}</h3>
-      <div>
-        <DogSearch onFilterSort={handleFilterSort} />
+     <div className='listContainer'>
+      <h2>Find your next friend!</h2>
+      <div className='filtersBox'>
+        <div className="mb-3">
+          <DogSearch onFilterSort={handleFilterSort} />
+        </div>
+        <div className="mb-3">
+          <LocationFilter onLocationFilterChange={handleLocation} />
+        </div>
       </div>
-      <div>
-        <LocationFilter onLocationFilterChange={handleLocation} />
-      </div>
-      <div>
-        <Button onClick={handleFindMatch}>Find My Match</Button>
-      </div><div>
-        <Button onClick={handleFindMatch}>Set Locations</Button>
+      <div className="mb-3">
+        <Button className='matchButton' onClick={handleFindMatch} variant="primary">
+          Find My Match
+        </Button>
       </div>
       <div>{matchedDog && <MatchedDog dogId={matchedDog} />}</div>
-      <div>
-      <Button
-          onClick={() => {
-            const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-            setSortOrder(newSortOrder);
-            fetchDogIds(newSortOrder, pageSize, currentPage, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
-          }}
-        >
-          Toggle Sort Order
-        </Button>
+      <div className="mb-3">
+        
       </div>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         <div>
-          <div className="pages">
-            <Button className="bg-light text-dark" onClick={loadPrevPage}>
-              Back
-            </Button>
-            <p>Current Page: {currentPage}</p>
-            <Button className="bg-success" onClick={loadNextPage}>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+                  <Button variant="light" onClick={loadPrevPage}>
+                    Back
+                  </Button>
+                  <div className='rightHandSide'>
+                  <Button
+                onClick={() => {
+                  const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+                  setSortOrder(newSortOrder);
+                  fetchDogIds(newSortOrder, pageSize, currentPage, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
+                }}
+                variant="dark"
+              >
+                Reverse Result
+              </Button>
+            <Button className='rightButton' variant="light" onClick={loadNextPage}>
               Go to Page {currentPage + 1}
             </Button>
+            </div>
+            {/*<p>Current Page: {currentPage}</p> */}
+         
           </div>
           <Container>
             <Row>
@@ -343,12 +349,12 @@ const DogList: React.FC = () => {
               ))}
             </Row>
           </Container>
-          <div className="pages">
-            <Button className="bg-light text-dark" onClick={loadPrevPage}>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <Button variant="light" onClick={loadPrevPage}>
               Back
             </Button>
             <p>Current Page: {currentPage}</p>
-            <Button className="bg-success" onClick={loadNextPage}>
+            <Button variant="success" onClick={loadNextPage}>
               Go to Page {currentPage + 1}
             </Button>
           </div>

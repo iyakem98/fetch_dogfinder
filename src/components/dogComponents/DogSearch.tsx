@@ -55,14 +55,24 @@ const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   return (
     <div className="dog-search-container">
-      <Button
+      {!isVisible && (
+        <Button
         onClick={toggleVisibility}
         variant="primary"
         className="filter-button"
       >
-        Filter
+        Filter by dog
       </Button>
+      )}
       {isVisible && (
+        <div>
+          <Button
+          onClick={toggleVisibility}
+          variant="primary"
+          className="filter-button bg-info"
+        >
+          Close Dog Filter
+        </Button>
         <div className="search-form">
           <Form onSubmit={handleSearch}>
             <FormGroup>
@@ -109,6 +119,7 @@ const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
               Search
             </Button>
           </Form>
+        </div>
         </div>
       )}
     </div>

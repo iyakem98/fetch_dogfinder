@@ -1,0 +1,31 @@
+/* LocationFilter.css */
+
+/* Style for the main container */
+.location-filter-container {
+    /*margin-top: 20px; /* Add margin as needed */
+  }
+  
+  /* Style for the filter button */
+  .filter-button {
+    margin-right: 10px; /* Add margin as needed */
+    /*background-color: #007bff; /* Change to your desired button color */
+    /*color: white; /* Text color */
+  }
+  
+  /* Style for the form labels */
+  .form-label {
+    font-weight: bold; /* Make labels bold */
+  }
+  
+  /* Style for the form control input fields */
+  .form-control {
+    margin-bottom: 10px; /* Add margin between input fields */
+    width: 100%; /* Expand input fields to fill the container */
+  }
+  
+  /* Style for the "Apply Location Filters" button */
+  .apply-button {
+    background-color: #28a745; /* Change to your desired button color */
+    color: white; /* Text color */
+  }
+  

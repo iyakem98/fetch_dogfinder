@@ -17,7 +17,7 @@ const Login = () => {
     const[email, setEmail] = useState('')
     const[password, setPassword] = useState('')
 
-
+    const navigate = useNavigate()
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
@@ -36,7 +36,8 @@ const Login = () => {
         
             if (response.status === 200) {
               console.log('Login success!');
-              localStorage.setItem('authToken', response.headers['fetch-access-token']);
+              //localStorage.setItem('authToken', response.headers['fetch-access-token']);
+              navigate('/dogs')
               console.log('Stored auth token:', localStorage.getItem('authToken'));
             } else {
               console.error('Login failed. Status:', response.status);

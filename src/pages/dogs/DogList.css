@@ -4,3 +4,29 @@
    align-items: center;
    justify-content: space-around;
 }
+
+.listContainer {
+   padding-top: 30px;
+}
+
+.filtersBox {
+
+  display: flex; 
+  padding-left: 10px;
+  justify-content: space-around;
+
+}
+
+.rightHandSide {
+   justify-content: space-between;
+}
+
+.rightButton {
+   margin-left: 10px;
+}
+
+.matchButton {
+   /*height: 70px;*/
+   border-radius: 20px;
+   font-size: 20px;
+}

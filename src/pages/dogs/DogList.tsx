@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 import DogCard from '../../components/dogComponents/DogCard';
 import DogSearch from '../../components/dogComponents/DogSearch';
+import LocationFilter from '../../components/dogComponents/LocationFilter';
 import './DogList.css';
 
 import MatchedDog from './MatchedDog';
@@ -26,6 +27,13 @@ interface DogSearchParams {
 interface Match {
   match: string;
 }
+
+interface LocSearchParams {
+  city: string;
+  states: string[];
+  zipCodes: string[];
+}
+
 
 const DogList: React.FC = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -65,6 +73,23 @@ const DogList: React.FC = () => {
     ageMin: undefined,
     ageMax: undefined,
   });
+
+  const [searchLocParams, setSearchLocParams] = useState<LocSearchParams>({
+    city: '',
+    states: [],
+    zipCodes: []
+  });
+
+  const [locFilterCriteria, setLocFilterCriteria] = useState<LocSearchParams>({
+    city: '',
+    states: [],
+    zipCodes: []
+  });
+  
+  
+
+
+
   
 
   useEffect(() => {
@@ -87,7 +112,7 @@ const DogList: React.FC = () => {
       const size = customPageSize || pageSize;
   
       const breedsQueryParam = breeds.length > 0 ? `breeds[]=${breeds.join('&breeds[]=')}` : '';
-      const zipCodesQueryParam = zipCodes.length > 0 ? `&zipCodes=${zipCodes.join(',')}` : '';
+      const zipCodesQueryParam = zipCodes.length > 0 ? `zipCodes[]=${zipCodes.join('&zipCodes[]=')}` : '';
       const ageMinQueryParam = ageMin ? `&ageMin=${ageMin}` : '';
       const ageMaxQueryParam = ageMax ? `&ageMax=${ageMax}` : '';
       
@@ -97,6 +122,8 @@ const DogList: React.FC = () => {
           withCredentials: true,
         }
       );
+
+      console.log( `popo https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}&${breedsQueryParam}&${zipCodesQueryParam}&${ageMinQueryParam}&${ageMaxQueryParam}&size=${size}&from=${(page - 1) * size}`,)
       
 
       console.log('a whaaa', breedsQueryParam)
@@ -144,19 +171,73 @@ const DogList: React.FC = () => {
     setFilterCriteria(searchParams);
     console.log('searchParams:', searchParams);
     console.log('Breeds:', searchParams.breeds);
-  console.log('Zip Codes:', searchParams.zipCodes);
-  console.log('Age Min:', searchParams.ageMin);
-  console.log('Age Max:', searchParams.ageMax);
+    console.log('Zip Codes:', searchParams.zipCodes);
+    console.log('Age Min:', searchParams.ageMin);
+    console.log('Age Max:', searchParams.ageMax);
   
     // Call fetchDogIds with the filter parameters
     fetchDogIds(sortOrder, pageSize, currentPage, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
   };
   
   
+/*  const handleLocation = async (searchLocParams: LocSearchParams) => {
+   
+    setLocFilterCriteria(searchLocParams)
+    console.log('loc params:', searchLocParams)
+  }; */
+
+  const handleLocation = async (searchLocParams: LocSearchParams) => {
+    try {
+      // Define the request body based on the provided searchLocParams
+      const requestBody: any = {
+        city: searchLocParams.city, // Set the city parameter
+      };
+  
+      // Check if there are items in the states array before setting it
+      if (searchLocParams.states && searchLocParams.states.length > 0) {
+        requestBody.states = searchLocParams.states; // Set the states parameter (an array of two-letter state/territory abbreviations)
+      }
+  
+      // Add other parameters as needed (e.g., geoBoundingBox, size, from)
+  
+      console.log(requestBody);
+  
+      // Make the POST request to /locations/search
+      const response = await axios.post('https://frontend-take-home-service.fetch.com/locations/search', requestBody, {
+        withCredentials: true, // Include credentials if required
+      });
+  
+      if (response.status === 200) {
+        // Handle the response data, which contains the results
+        const searchResults = response.data.results;
+        const totalResults = response.data.total;
+  
+        console.log('Location search results:', searchResults);
+        console.log('Total results:', totalResults);
+
+        const zipCodes = searchResults.map((result: any) => result.zip_code);
+      console.log('Zip Codes:', zipCodes);
+
+      if (zipCodes.length > 1) {
+        // Call fetchDogIds with the zipCodes array
+        fetchDogIds(sortOrder, pageSize, currentPage, searchParams.breeds, zipCodes, searchParams.ageMin, searchParams.ageMax);
+      }
+
+  
+        // You can further process or display the search results here
+      } else {
+        console.error('Failed to fetch location search results. Status:', response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred during location search:', error);
+    }
+  };
+  
   
 
 
-  
+
+ 
 
   async function fetchMatchedDog(dogIds: string[]): Promise<string | null> {
     try {
@@ -196,6 +277,7 @@ const DogList: React.FC = () => {
     }
   };
 
+  
   const loadNextPage = () => {
     if (nextPageQuery) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -220,7 +302,12 @@ const DogList: React.FC = () => {
         <DogSearch onFilterSort={handleFilterSort} />
       </div>
       <div>
+        <LocationFilter onLocationFilterChange={handleLocation} />
+      </div>
+      <div>
         <Button onClick={handleFindMatch}>Find My Match</Button>
+      </div><div>
+        <Button onClick={handleFindMatch}>Set Locations</Button>
       </div>
       <div>{matchedDog && <MatchedDog dogId={matchedDog} />}</div>
       <div>

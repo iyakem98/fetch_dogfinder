@@ -21,8 +21,7 @@ const DogSearch: React.FC<DogSearchProps> = ({ onFilterSort }) => {
     ageMax: undefined,
   });
 
-  const [isVisible, setIsVisible] = useState(true); // Initially visible
-
+  const [isVisible, setIsVisible] = useState(false); // Initially visible
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault(); 
     onFilterSort(searchParams);

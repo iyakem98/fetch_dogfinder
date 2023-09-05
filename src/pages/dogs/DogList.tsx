@@ -51,6 +51,10 @@ const DogList: React.FC = () => {
   const [totalDogs, setTotalDogs] = useState<number>(0);
   const [nextPageQuery, setNextPageQuery] = useState<string | null>(null);
 
+  const [favoriteDogs, setFavoriteDogs] = useState<string[]>([]);
+
+
+
   const url = `https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}`;
 
   const [searchParams, setSearchParams] = useState<DogSearchParams>({
@@ -265,7 +269,7 @@ const DogList: React.FC = () => {
     }
   }
 
-  const handleFindMatch = async () => {
+  /*const handleFindMatch = async () => {
     const dogIds = dogs.map((dog) => dog.id); // Assuming 'dogs' is your array of dogs
 
     const matchedDog = await fetchMatchedDog(dogIds);
@@ -275,7 +279,22 @@ const DogList: React.FC = () => {
       // You can now display or handle the matched dog as needed
       console.log('Matched dog ID:', matchedDog);
     }
+  }; */
+
+  const handleFindMatch = async (favoriteDogIds: string[]) => {
+    // Randomly select a dog ID from the favoriteDogIds array
+    const randomIndex = Math.floor(Math.random() * favoriteDogIds.length);
+    const matchedDogId = favoriteDogIds[randomIndex];
+  
+    // Call fetchMatchedDog with the randomly selected dog ID
+    const matchedDog = await fetchMatchedDog([matchedDogId]);
+  
+    if (matchedDog) {
+      // You can now display or handle the matched dog as needed
+      console.log('Matched dog ID:', matchedDog);
+    }
   };
+  
 
   
   const loadNextPage = () => {
@@ -293,6 +312,19 @@ const DogList: React.FC = () => {
     }
   };
 
+  const handleFavoriteToggle = (dogId: string) => {
+    if (favoriteDogs.includes(dogId)) {
+      // Dog is already in favorites, so remove it
+      const updatedFavorites = favoriteDogs.filter((id) => id !== dogId);
+      setFavoriteDogs(updatedFavorites);
+    } else {
+      // Dog is not in favorites, so add it
+      setFavoriteDogs([...favoriteDogs, dogId]);
+    }
+  };
+  
+  
+
 
   return (
      <div className='listContainer'>
@@ -306,7 +338,7 @@ const DogList: React.FC = () => {
         </div>
       </div>
       <div className="mb-3">
-        <Button className='matchButton' onClick={handleFindMatch} variant="primary">
+        <Button className='matchButton' onClick={() => handleFindMatch(favoriteDogs)} variant="primary">
           Find My Match
         </Button>
       </div>
@@ -342,11 +374,12 @@ const DogList: React.FC = () => {
           </div>
           <Container>
             <Row>
-              {dogs.map((dog, index) => (
-                <Col sm={12} md={6} lg={4} xl={3} key={index}>
-                  <DogCard dog={dog} />
-                </Col>
-              ))}
+            {dogs.map((dog, index) => (
+              <Col sm={12} md={6} lg={4} xl={3} key={index}>
+                <DogCard dog={dog} favoriteDogs={favoriteDogs} onFavoriteToggle={handleFavoriteToggle} />
+              </Col>
+            ))}
+
             </Row>
           </Container>
           <div className="d-flex justify-content-between align-items-center mt-3">

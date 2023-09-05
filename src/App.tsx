@@ -10,11 +10,15 @@ import Register from './pages/auth/Register';
 import DogList from './pages/dogs/DogList';
 import MatchedDog from './pages/dogs/MatchedDog'
 import NavBar from './components/navbar/NavBar';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
+
 function App() {
   const [dogId, setDogId] = useState('');
   return (
     <div className="App">
-      
+      <ToastContainer />
       <Router>
         <NavBar/>
        <Routes>

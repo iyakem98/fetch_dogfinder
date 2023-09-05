@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import './DogCard.css'; // Import your CSS file
+import {Button} from 'react-bootstrap'
 
 interface DogCardProps {
   dog: {
@@ -30,9 +31,9 @@ const DogCard: React.FC<DogCardProps> = ({ dog, favoriteDogs, onFavoriteToggle }
         <Card.Text>Age: {dog.age}</Card.Text>
         <Card.Text>Zip Code: {dog.zip_code}</Card.Text>
         <Card.Text>Breed: {dog.breed}</Card.Text>
-        <button onClick={handleFavoriteClick}>
+        <Button onClick={handleFavoriteClick} variant={isFavorite ? 'light' : 'primary'}>
           {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-        </button>
+        </Button>
       </Card.Body>
     </Card>
   );

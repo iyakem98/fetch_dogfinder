@@ -6,6 +6,9 @@ import DogSearch from '../../components/dogComponents/DogSearch';
 import LocationFilter from '../../components/dogComponents/LocationFilter';
 import './DogList.css';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import MatchedDog from './MatchedDog';
 
 interface Dog {
@@ -52,6 +55,8 @@ const DogList: React.FC = () => {
   const [nextPageQuery, setNextPageQuery] = useState<string | null>(null);
 
   const [favoriteDogs, setFavoriteDogs] = useState<string[]>([]);
+
+  const [isNoMatch, setIsNoMatch] = useState(false)
 
 
 
@@ -281,13 +286,20 @@ const DogList: React.FC = () => {
     }
   }; */
 
+  const notify = () => toast("Wow so easy!");
+
   const handleFindMatch = async (favoriteDogIds: string[]) => {
     // Randomly select a dog ID from the favoriteDogIds array
+    if (favoriteDogIds.length < 1) {
+      toast("Add dogs to your favorites' list first"); // Display a toast message
+      return; 
+    }
     const randomIndex = Math.floor(Math.random() * favoriteDogIds.length);
     const matchedDogId = favoriteDogIds[randomIndex];
   
     // Call fetchMatchedDog with the randomly selected dog ID
     const matchedDog = await fetchMatchedDog([matchedDogId]);
+    
   
     if (matchedDog) {
       // You can now display or handle the matched dog as needed
@@ -351,9 +363,17 @@ const DogList: React.FC = () => {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center mb-3">
-                  <Button variant="light" onClick={loadPrevPage}>
-                    Back
-                  </Button>
+            {currentPage > 1 &&  
+                     <Button variant="light" onClick={loadPrevPage}>
+                     Back
+                   </Button>
+            }
+
+            {currentPage === 1 && 
+
+                  <div> </div>
+            }
+               
                   <div className='rightHandSide'>
                   <Button
                 onClick={() => {
@@ -383,10 +403,16 @@ const DogList: React.FC = () => {
             </Row>
           </Container>
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <Button variant="light" onClick={loadPrevPage}>
-              Back
-            </Button>
-            <p>Current Page: {currentPage}</p>
+            {currentPage > 1 && 
+             <Button variant="light" onClick={loadPrevPage}>
+             Back
+           </Button>
+            }
+            {currentPage === 1 && 
+
+              <div> </div>
+              }
+
             <Button variant="success" onClick={loadNextPage}>
               Go to Page {currentPage + 1}
             </Button>

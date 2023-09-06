@@ -1,46 +1,53 @@
-# Getting Started with Create React App
+# Fetch Frontend Homework Exercise
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Author:** Iyakem Estifanos (GitHub: iyakem98)
 
-## Available Scripts
+## Introduction
 
-In the project directory, you can run:
+Welcome to the Fetch Frontend Homework Exercise! This project is designed to allow Fetch Frontend Engineer candidates to demonstrate their deep understanding of Frontend Development, particularly using React and TypeScript. The exercise involves working with a set of provided APIs, enabling you to showcase your skills through a range of tasks involving both GET and POST requests. It has also been deployed using Netflify and can be accessed here: "https://lucent-starlight-38266e.netlify.app/".
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To get started with this project, follow these steps:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/iyakem98/fetch_dogfinder.git
+2. **Install Dependencies**: 
+   ```bash
+   cd fetch_dogfinder
+   yarn install
+2. **Run The Applicatoin**: 
+   ```bash
+   yarn start
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Clean and Responsive UI**: The application boasts a clean and responsive user interface, ensuring a seamless user experience.
 
-### `npm run build`
+- **Component Descriptions**: Each component within the application includes a descriptive header, providing other developers with insights into its purpose and functionality.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Intuitive Routing**: The login screen is conveniently accessible via the "/" route. You can also access it by clicking on the Fetch Rewards icon or the "FetchRewards" text in the navbar.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Deliverables
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **User Authentication**: Users can easily log into their accounts using any valid email and name parameters.
 
-### `npm run eject`
+2. **Dog List and Filtering**: Users can view a list of dogs and apply filters based on dog type and location. The results are conveniently paginated for easy navigation.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. **Favorite Dogs and Matching**: Users have the ability to select their favorite dogs and generate personalized matches based on their preferences.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. **Engaging UI**: The application features an eye-catching color scheme and incorporates authentic Fetch Rewards icons to enhance the user experience.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Dependencies
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+This project relies on the following dependencies:
 
-## Learn More
+- **Axios**: Used for connecting with the backend.
+- **React-bootstrap**: Enhances the UI with Bootstrap components.
+- **React-router-dom**: Facilitates seamless navigation between different pages.
+- **React-icons**: Adds engaging icons to the UI.
+- **React-toastify**: Simplifies error messaging to users.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+

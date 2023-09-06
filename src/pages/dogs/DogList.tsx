@@ -345,12 +345,14 @@ const DogList: React.FC = () => {
   const handleSort = () => {
     if (sortOrder === 'asc'){
         setSortOrder('desc');
-        fetchDogIds(filterCriteria, 'desc', pageSize, currentPage);
+        setCurrentPage(1)
+        fetchDogIds(filterCriteria, 'desc', pageSize, 1);
     }
 
     else {
     setSortOrder('asc');
-    fetchDogIds(filterCriteria, 'asc', pageSize, currentPage);
+    setCurrentPage(1)
+    fetchDogIds(filterCriteria, 'asc', pageSize, 1);
     }
     
   }

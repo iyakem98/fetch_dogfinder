@@ -1,3 +1,7 @@
+/* This is the DogCard component that makes each card within the list of dog cards displayed in the dogList page.
+It displays every dog property , excluding id, and even lets users add the dog to your favorites' llst. Properties
+here are passed from DogList using props. */
+
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import './DogCard.css'; 

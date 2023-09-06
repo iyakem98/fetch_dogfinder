@@ -1,3 +1,6 @@
+/* This is the navigation bar for the app. It is pretty simple; it has three different buttons, Fetch Rewards with icon
+(for Home/Login), Dogs (to render a list of dogs), and Log Out button. */
+
 import React from 'react';
 import { Navbar, Nav, NavDropdown, Image, Button } from 'react-bootstrap';
 import fetchLogo from '../../images/fetchLogo.png'
@@ -15,28 +18,26 @@ const NavBar: React.FC = () => {
   
   async function handleLogOut() {
     try {
-      // Send a POST request to the logout endpoint
+     
       const response = await axios.post('https://frontend-take-home-service.fetch.com/auth/logout', null, {
-        withCredentials: true, // Include credentials (cookies) with the request
+        withCredentials: true,
       });
   
       if (response.status === 200) {
-        // Logout successful, you can perform further actions here if needed
+        
         console.log('Logout successful');
         navigate('/');
       } else {
         console.error('Logout failed. Status:', response.status);
-        // Handle specific logout failure cases if needed
+        
       }
     } catch (error) {
       console.error('An error occurred during logout:', error);
-      // Handle network errors or other issues
+     
     }
   }
 
-// Usage:
-// Call the logout function when you want to log the user out
-// logout();
+
 
   return (
     <nav className="navbar navbar-expand-lg bg-dark cont" data-bs-theme="dark">
@@ -51,7 +52,7 @@ const NavBar: React.FC = () => {
         <ul className="navbar-nav me-auto">
           <li className="nav-item">
           <Link to = '/dogs' style={{  textDecoration: 'none' }} className='text-primary navbrand'>
-            <Button className='bg-dark' style={{borderWidth: '0', fontSize: '22px', paddingBottom: '15px', marginLeft: '10px'}}>
+            <Button className='bg-dark' style={{borderWidth: '0', fontSize: '22px', paddingBottom: '12px', marginLeft: '10px'}}>
               Dogs
             </Button>
         </Link>

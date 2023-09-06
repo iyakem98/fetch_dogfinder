@@ -1,3 +1,5 @@
+/* This component enables users to filter the dogs by breed, age, and zip codes. */
+
 import React, { useState } from 'react';
 import './DogSearch.css';
 import { Form, Button, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
@@ -24,6 +26,7 @@ const DogSearch: React.FC<DogSearchProps> = ({ onFilterSort }) => {
   const [isVisible, setIsVisible] = useState(false); // Initially visible
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault(); 
+    setIsVisible(false)
     onFilterSort(searchParams);
   };
 

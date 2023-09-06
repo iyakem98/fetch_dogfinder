@@ -1,3 +1,4 @@
+/* This is the Login (in our case Home) screen that is routed simply using '/'. I have tried to include some icon-styling here" */
 import React from 'react'
 import { useState } from 'react'
 import {Form, Button, Row, Col, Image} from 'react-bootstrap'

@@ -1,3 +1,5 @@
+/* This is our location filter component that lets users filter dogs by city or states. It fetched the zipcodes, which are
+then sent to the main fetching API. */
 import React, { useState } from 'react';
 import { Form, FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap';
 import './LocationFilter.css'
@@ -19,7 +21,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onLocationFilterChange 
     zipCodes: [],
   });
 
-  const [isVisible, setIsVisible] = useState(false); // Initially visible
+  const [isVisible, setIsVisible] = useState(false); 
 
   const handleLocationFilterChange = () => {
     onLocationFilterChange(locationParams);
@@ -31,6 +33,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onLocationFilterChange 
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault(); 
+    setIsVisible(false)
     onLocationFilterChange(locationParams);
   };
 
@@ -42,16 +45,16 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onLocationFilterChange 
   const { name, value } = event.target;
 
   if (name === 'city') {
-    // If name is "city," set the value as a string
+    
     setLocationParams({
       ...locationParams,
-      [name]: value.trim(), // Trim whitespace
+      [name]: value.trim(), 
     });
   } else {
-    // For other names (including "states"), split the input value by commas to create an array
+    
     setLocationParams({
       ...locationParams,
-      [name]: value.split(',').map((item) => item.trim()), // Split by comma and trim whitespace
+      [name]: value.split(',').map((item) => item.trim()), 
     });
   }
 };

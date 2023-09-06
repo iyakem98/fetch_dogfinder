@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+/* This is the DogList component that is responsible for displaying the list of dogs with or without filters.
+There are different interfaces to handle the dog cards and their properties incluiding, search parameters, location parameters,
+and matching parameters, all of which will be described in their respective components. Note that the states use context
+provider in order to be global so every component can track their changes*/
+
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 import DogCard from '../../components/dogComponents/DogCard';
@@ -6,7 +11,7 @@ import DogSearch from '../../components/dogComponents/DogSearch';
 import LocationFilter from '../../components/dogComponents/LocationFilter';
 import './DogList.css';
 import {Link, useNavigate} from 'react-router-dom'
-import {AiFillHeart} from "react-icons/ai"
+import {AiFillHeart, AiOutlineClose} from "react-icons/ai"
 
 
 
@@ -30,8 +35,8 @@ interface Dog {
 interface DogSearchParams {
   breeds: string[];
   zipCodes: string[];
-  ageMin?: number | undefined;
-  ageMax?: number | undefined;
+  ageMin?: number | null;
+  ageMax?: number | null;
 }
 
 interface Match {
@@ -77,8 +82,8 @@ const DogList: React.FC = () => {
   const [searchParams, setSearchParams] = useState<DogSearchParams>({
     breeds: [],
     zipCodes: [],
-    ageMin: undefined,
-    ageMax: undefined,
+    ageMin: null,
+    ageMax: null,
   });
 
   const [dogListParams, setDogListParams] = useState<DogSearchParams>({
@@ -107,17 +112,17 @@ const DogList: React.FC = () => {
   
 
   useEffect(() => {
-    fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
+    fetchDogIds(filterCriteria, sortOrder, pageSize, currentPage);
   }, [sortOrder, pageSize, currentPage]);
 
   useEffect(() => {
-    // Update favCounter whenever favoriteDogs changes
+ 
     setFavCounter(favoriteDogs.length);
   }, [favoriteDogs]);
 
 
   async function fetchDogIds(
-    searchParams: DogSearchParams, // Include searchParams as a parameter
+    filterCriteria: DogSearchParams, 
     sortOrder: string = 'asc',
     customPageSize: number | undefined,
     customCurrentPage: number | undefined
@@ -126,10 +131,10 @@ const DogList: React.FC = () => {
       const page = customCurrentPage || currentPage;
       const size = customPageSize || pageSize;
   
-      const breedsQueryParam = searchParams.breeds.length > 0 ? `breeds[]=${searchParams.breeds.join('&breeds[]=')}` : '';
-      const zipCodesQueryParam = searchParams.zipCodes.length > 0 ? `zipCodes[]=${searchParams.zipCodes.join('&zipCodes[]=')}` : '';
-      const ageMinQueryParam = searchParams.ageMin ? `&ageMin=${searchParams.ageMin}` : '';
-      const ageMaxQueryParam = searchParams.ageMax ? `&ageMax=${searchParams.ageMax}` : '';
+      const breedsQueryParam = filterCriteria.breeds.length > 0 ? `breeds[]=${filterCriteria.breeds.join('&breeds[]=')}` : '';
+      const zipCodesQueryParam = filterCriteria.zipCodes.length > 0 ? `zipCodes[]=${filterCriteria.zipCodes.join('&zipCodes[]=')}` : '';
+      const ageMinQueryParam = filterCriteria.ageMin ? `&ageMin=${filterCriteria.ageMin}` : '';
+      const ageMaxQueryParam = filterCriteria.ageMax ? `&ageMax=${filterCriteria.ageMax}` : '';
   
       const response = await axios.get(
         `https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}&${breedsQueryParam}&${zipCodesQueryParam}&${ageMinQueryParam}&${ageMaxQueryParam}&size=${size}&from=${(page - 1) * size}`,
@@ -219,6 +224,7 @@ const DogList: React.FC = () => {
           searchParams.zipCodes = zipCodes;
 
           // Call fetchDogIds with the updated searchParams
+          setFilterCriteria(searchParams)
           fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
         }
       } else {
@@ -290,54 +296,142 @@ const DogList: React.FC = () => {
   const loadNextPage = () => {
     if (nextPageQuery) {
       setCurrentPage((prevPage) => prevPage + 1);
+
+      console.log(filterCriteria)
   
-      fetchDogIds(searchParams, sortOrder, pageSize, currentPage+1);
+      fetchDogIds(filterCriteria, sortOrder, pageSize, currentPage+1);
     }
   };
 
   const loadPrevPage = () => {
     if (nextPageQuery) {
       setCurrentPage((prevPage) => prevPage - 1);
-      fetchDogIds(searchParams, sortOrder, pageSize, currentPage-1);
+      fetchDogIds(filterCriteria, sortOrder, pageSize, currentPage-1);
     }
   };
 
   const handleFavoriteToggle = (dogId: string) => {
     if (favoriteDogs.includes(dogId)) {
-      // Dog is already in favorites, so remove it
       const updatedFavorites = favoriteDogs.filter((id) => id !== dogId);
       setFavoriteDogs(updatedFavorites);
     } else {
-      // Dog is not in favorites, so add it
       setFavoriteDogs([...favoriteDogs, dogId]);
     }
   };
+
+  const onReset = () => {
+
+    const nullSearchParams = {
+      breeds: [],
+      zipCodes: [],
+      ageMin: null,
+      ageMax: null,
+    };
+
+    setSearchParams(nullSearchParams)
+    
+    setFilterCriteria(nullSearchParams);
+
+    // Pass the updated searchParams to fetchDogIds
+    fetchDogIds(nullSearchParams, sortOrder, pageSize, currentPage);
+  };
   
+  const handleSort = () => {
+    if (sortOrder === 'asc'){
+        setSortOrder('desc');
+        fetchDogIds(filterCriteria, 'desc', pageSize, currentPage);
+    }
+
+    else {
+    setSortOrder('asc');
+    fetchDogIds(filterCriteria, 'asc', pageSize, currentPage);
+    }
+    
+  }
+
+  const onBackMatch = () => {
+    setMatchedDog(null)
+    onReset()
+    setFavoriteDogs([]);
+  }
+
+  const removeFav = () => {
+    setFavoriteDogs([]);
+  }
   
 
 
   return (
      <div className='listContainer'>
-      <h2>Find your next friend!</h2>
-      {favCounter > 0 && 
-        <div style={{ marginTop: 20}}>
-          <h4><AiFillHeart size={40} color='red'/>: {favCounter}</h4>
-        </div>
-      }
+      {!matchedDog && 
+       <div>
+        <h1 style={{
+          marginBottom: "18px"
+        }}>Find your next friend!</h1>
       <div className='filtersBox'>
         <div className="mb-3">
           <DogSearch onFilterSort={handleFilterSort} />
+        </div>
+        <div>
+          <Button onClick={onReset} variant='light'>
+            Reset all Filters
+          </Button>
         </div>
         <div className="mb-3">
           <LocationFilter onLocationFilterChange={handleLocation} />
         </div>
       </div>
-      <div className="mb-3">
+      <div className="mb-3" style={{
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'center'
+      }}>
+      {favCounter > 0 && 
+        <div style={{ marginTop: 20, display: 'flex'}}>
+            <Button variant='white' onClick={removeFav}>
+              Remove Favorites 
+            <AiOutlineClose size={20} style={{marginBottom: 12}}/>
+          </Button>
+          <h4><AiFillHeart size={40} color='red'/>: {favCounter}</h4>
+        </div>
+      }
         <Button className='matchButton' onClick={() => handleFindMatch(favoriteDogs)} variant="primary">
           Find My Match
         </Button>
       </div>
-      <div>{matchedDog && <MatchedDog dogId={matchedDog} />}</div>
+       </div>
+      }
+      
+      <div>{matchedDog && 
+      
+      <div style={{display: 'flex'}}>
+        <div style={{marginBottom: '20px', width: '20%'}}>
+          <Button onClick={onBackMatch} variant='primary' style={{
+            height: '50px',
+            width: '100px',
+            fontSize: '20px',
+            marginLeft: '40px'
+          }}>
+            Go Back
+          </Button>
+        </div>
+        <div style={{ 
+          width: '80%',
+          //alignItems: 'center',
+          paddingRight: '20%'
+          
+        }}>
+        <MatchedDog dogId={matchedDog} />
+        </div>
+      </div>
+      
+      
+     
+      
+      
+      
+      
+      }</div>
       <div className="mb-3">
         
       </div>
@@ -347,8 +441,10 @@ const DogList: React.FC = () => {
         <div>
           <div className="d-flex justify-content-between align-items-center mb-3">
             {currentPage > 1 &&  
-                     <Button variant="light" onClick={loadPrevPage}>
-                     Back
+                     <Button variant="light" onClick={loadPrevPage} style={{
+                      marginLeft: 12
+                     }}>
+                     Back to page {currentPage-1}
                    </Button>
             }
 
@@ -356,24 +452,25 @@ const DogList: React.FC = () => {
 
                   <div> </div>
             }
-               
-                  <div className='rightHandSide'>
-                  <Button
-                onClick={() => {
-                  const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-                  setSortOrder(newSortOrder);
-                  fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
-                }}
+              {!matchedDog && 
+
+                <div className='rightHandSide'>
+                <Button
+                onClick={handleSort}
                 variant="dark"
-              >
-                Reverse Result
-              </Button>
-            <Button className='rightButton' variant="light" onClick={loadNextPage}>
-              Go to Page {currentPage + 1}
-            </Button>
-            </div>
-            {/*<p>Current Page: {currentPage}</p> */}
-         
+                >
+                {sortOrder === 'asc'? 'Display z-a' : 'Display a-z'}
+                </Button>
+                <Button className='rightButton' variant="light" onClick={loadNextPage} style={{
+                  marginRight: 12,
+                }}>
+                Go to Page {currentPage + 1}
+                </Button>
+                </div>
+
+              
+              } 
+                 
           </div>
           <Container>
             <Row>
@@ -387,8 +484,10 @@ const DogList: React.FC = () => {
           </Container>
           <div className="d-flex justify-content-between align-items-center mt-3">
             {currentPage > 1 && 
-             <Button variant="light" onClick={loadPrevPage}>
-             Back
+             <Button variant="light" onClick={loadPrevPage} style={{
+              marginLeft: 12,
+             }}>
+             Back to page {currentPage-1}
            </Button>
             }
             {currentPage === 1 && 
@@ -396,9 +495,15 @@ const DogList: React.FC = () => {
               <div> </div>
               }
 
-            <Button variant="success" onClick={loadNextPage}>
-              Go to Page {currentPage + 1}
-            </Button>
+              {!matchedDog && 
+
+            <Button variant="light" onClick={loadNextPage} style={{
+              marginRight: 12,
+            }}>
+            Go to Page {currentPage + 1}
+          </Button>
+              }
+
           </div>
         </div>
       )}

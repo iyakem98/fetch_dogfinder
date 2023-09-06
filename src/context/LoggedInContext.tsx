@@ -1,10 +1,12 @@
+/* This was supposed to be a global state to check whether a user is logged in or not. But unfortunately, due to the 
+lack of tokens sent from the API to put into a localstorage, I could not implement it into the application. */
 // Inside LoggedInProvider.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface LoggedInContextType {
   loggedIn: boolean;
-  login: () => void; // Define a login function
-  logout: () => void; // Define a logout function
+  login: () => void; 
+  logout: () => void; 
 }
 
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined);
@@ -15,13 +17,13 @@ interface LoggedInProviderProps {
 
 export const LoggedInProvider: React.FC<LoggedInProviderProps> = ({ children }) => {
   const [loggedIn, setLoggedInState] = useState(() => {
-    // Initialize loggedIn based on the presence of the fetch-access-token cookie
+    
     return document.cookie.includes('fetch-access-token');
   });
 
   useEffect(() => {
     const checkLoginTimeout = () => {
-      // After an hour, automatically log out the user
+      
       setLoggedInState(false);
     };
 
@@ -33,12 +35,12 @@ export const LoggedInProvider: React.FC<LoggedInProviderProps> = ({ children }) 
   }, []);
 
   const login = () => {
-    // Perform any login logic here, and then set loggedIn to true
+   
     setLoggedInState(true);
   };
 
   const logout = () => {
-    // Perform any logout logic here, and then set loggedIn to false
+   
     setLoggedInState(false);
   };
 

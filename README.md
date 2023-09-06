@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Welcome to the Fetch Frontend Homework Exercise! This project is designed to allow Fetch Frontend Engineer candidates to demonstrate their deep understanding of Frontend Development, particularly using React and TypeScript. The exercise involves working with a set of provided APIs, enabling you to showcase your skills through a range of tasks involving both GET and POST requests.
+Welcome to the Fetch Frontend Homework Exercise! This project is designed to allow Fetch Frontend Engineer candidates to demonstrate their deep understanding of Frontend Development, particularly using React and TypeScript. The exercise involves working with a set of provided APIs, enabling you to showcase your skills through a range of tasks involving both GET and POST requests. It has also been deployed using Netflify and can be accessed here: "https://lucent-starlight-38266e.netlify.app/".
 
 ## Getting Started
 

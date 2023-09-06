@@ -6,6 +6,21 @@
 
 Welcome to the Fetch Frontend Homework Exercise! This project is designed to allow Fetch Frontend Engineer candidates to demonstrate their deep understanding of Frontend Development, particularly using React and TypeScript. The exercise involves working with a set of provided APIs, enabling you to showcase your skills through a range of tasks involving both GET and POST requests.
 
+## Getting Started
+
+To get started with this project, follow these steps:
+
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/iyakem98/fetch_dogfinder.git
+2. **Install Dependencies**: 
+   ```bash
+   cd fetch_dogfinder
+   yarn install
+2. **Run The Applicatoin**: 
+   ```bash
+   yarn start
+
 ## Features
 
 - **Clean and Responsive UI**: The application boasts a clean and responsive user interface, ensuring a seamless user experience.
@@ -33,3 +48,6 @@ This project relies on the following dependencies:
 - **React-router-dom**: Facilitates seamless navigation between different pages.
 - **React-icons**: Adds engaging icons to the UI.
 - **React-toastify**: Simplifies error messaging to users.
+
+
+

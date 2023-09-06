@@ -1,7 +1,10 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import './DogCard.css'; // Import your CSS file
+import './DogCard.css'; 
 import {Button} from 'react-bootstrap'
+import { useEffect } from 'react';
+import { FaHeart } from "react-icons/fa";
+import {AiFillHeart, AiOutlineHeart} from "react-icons/ai"
 
 interface DogCardProps {
   dog: {
@@ -12,16 +15,19 @@ interface DogCardProps {
     img: string;
     id: string;
   };
-  favoriteDogs: string[]; // Add favoriteDogs prop
+  favoriteDogs: string[]; 
   onFavoriteToggle: (dogId: string) => void;
 }
 
 const DogCard: React.FC<DogCardProps> = ({ dog, favoriteDogs, onFavoriteToggle }) => {
   const isFavorite = favoriteDogs.includes(dog.id);
+  
 
   const handleFavoriteClick = () => {
     onFavoriteToggle(dog.id);
   };
+
+
 
   return (
     <Card className="dog-card">
@@ -31,8 +37,8 @@ const DogCard: React.FC<DogCardProps> = ({ dog, favoriteDogs, onFavoriteToggle }
         <Card.Text>Age: {dog.age}</Card.Text>
         <Card.Text>Zip Code: {dog.zip_code}</Card.Text>
         <Card.Text>Breed: {dog.breed}</Card.Text>
-        <Button onClick={handleFavoriteClick} variant={isFavorite ? 'light' : 'primary'}>
-          {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+        <Button onClick={handleFavoriteClick}  style = {{padding: '0px'}} variant={isFavorite ? 'white' : 'white'}>
+          {isFavorite ? <AiFillHeart size={30} color='red'/>: <AiOutlineHeart size={30}/>}
         </Button>
       </Card.Body>
     </Card>

@@ -4,6 +4,7 @@ import DogCard from '../../components/dogComponents/DogCard';
 interface FavoritesListProps {
   favoriteDogs: string[]; // An array of string dog IDs
   onFavoriteToggle: (dogId: string) => void;
+  favCounter: number
   dogs: {
     id: string;
     name: string;
@@ -17,14 +18,7 @@ interface FavoritesListProps {
 const FavoritesList: React.FC<FavoritesListProps> = ({ favoriteDogs, onFavoriteToggle, dogs }) => {
   return (
     <div className="favorites-container">
-      {dogs.map((dog) => (
-        <DogCard
-          key={dog.id}
-          dog={dog} // Pass the Dog object
-          onFavoriteToggle={onFavoriteToggle} // Pass the onFavoriteToggle function
-          favoriteDogs={favoriteDogs} // Pass the favoriteDogs array
-        />
-      ))}
+    
     </div>
   );
 };

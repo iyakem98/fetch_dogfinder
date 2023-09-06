@@ -5,6 +5,13 @@ import DogCard from '../../components/dogComponents/DogCard';
 import DogSearch from '../../components/dogComponents/DogSearch';
 import LocationFilter from '../../components/dogComponents/LocationFilter';
 import './DogList.css';
+import {Link, useNavigate} from 'react-router-dom'
+import {AiFillHeart} from "react-icons/ai"
+
+
+
+
+import { useFilterContext } from '../../context/FilterContext';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,6 +49,8 @@ const DogList: React.FC = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [isFiltering, setIsFiltering] = useState(false);
 
+  const { filterCriteria, setFilterCriteria } = useFilterContext();
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [sortField, setSortField] = useState<string>('breed'); // Default sort by breed
@@ -49,16 +58,19 @@ const DogList: React.FC = () => {
 
   const [matchedDog, setMatchedDog] = useState<string | null>(null);
 
+  
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const [totalDogs, setTotalDogs] = useState<number>(0);
   const [nextPageQuery, setNextPageQuery] = useState<string | null>(null);
 
   const [favoriteDogs, setFavoriteDogs] = useState<string[]>([]);
+  const [favCounter, setFavCounter] = useState<number>(favoriteDogs.length)
 
   const [isNoMatch, setIsNoMatch] = useState(false)
 
-
+  const navigate = useNavigate()
 
   const url = `https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}`;
 
@@ -70,13 +82,6 @@ const DogList: React.FC = () => {
   });
 
   const [dogListParams, setDogListParams] = useState<DogSearchParams>({
-    breeds: [],
-    zipCodes: [],
-    ageMin: undefined,
-    ageMax: undefined,
-  });
-
-  const [filterCriteria, setFilterCriteria] = useState<DogSearchParams>({
     breeds: [],
     zipCodes: [],
     ageMin: undefined,
@@ -102,45 +107,43 @@ const DogList: React.FC = () => {
   
 
   useEffect(() => {
-    console.log('DogList component mounted');
-
-    fetchDogIds(sortOrder, pageSize, currentPage, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
+    fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
   }, [sortOrder, pageSize, currentPage]);
 
+  useEffect(() => {
+    // Update favCounter whenever favoriteDogs changes
+    setFavCounter(favoriteDogs.length);
+  }, [favoriteDogs]);
+
+
   async function fetchDogIds(
+    searchParams: DogSearchParams, // Include searchParams as a parameter
     sortOrder: string = 'asc',
     customPageSize: number | undefined,
-    customCurrentPage: number | undefined,
-    breeds: string[] = [],
-    zipCodes: string[] = [],
-    ageMin: number | undefined,
-    ageMax: number | undefined
+    customCurrentPage: number | undefined
   ) {
     try {
       const page = customCurrentPage || currentPage;
       const size = customPageSize || pageSize;
   
-      const breedsQueryParam = breeds.length > 0 ? `breeds[]=${breeds.join('&breeds[]=')}` : '';
-      const zipCodesQueryParam = zipCodes.length > 0 ? `zipCodes[]=${zipCodes.join('&zipCodes[]=')}` : '';
-      const ageMinQueryParam = ageMin ? `&ageMin=${ageMin}` : '';
-      const ageMaxQueryParam = ageMax ? `&ageMax=${ageMax}` : '';
-      
+      const breedsQueryParam = searchParams.breeds.length > 0 ? `breeds[]=${searchParams.breeds.join('&breeds[]=')}` : '';
+      const zipCodesQueryParam = searchParams.zipCodes.length > 0 ? `zipCodes[]=${searchParams.zipCodes.join('&zipCodes[]=')}` : '';
+      const ageMinQueryParam = searchParams.ageMin ? `&ageMin=${searchParams.ageMin}` : '';
+      const ageMaxQueryParam = searchParams.ageMax ? `&ageMax=${searchParams.ageMax}` : '';
+  
       const response = await axios.get(
         `https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}&${breedsQueryParam}&${zipCodesQueryParam}&${ageMinQueryParam}&${ageMaxQueryParam}&size=${size}&from=${(page - 1) * size}`,
         {
           withCredentials: true,
         }
       );
-
-      console.log( `popo https://frontend-take-home-service.fetch.com/dogs/search?sort=${sortField}:${sortOrder}&${breedsQueryParam}&${zipCodesQueryParam}&${ageMinQueryParam}&${ageMaxQueryParam}&size=${size}&from=${(page - 1) * size}`,)
-      
-
-      console.log('a whaaa', breedsQueryParam)
   
       if (response.status === 200) {
         const dogIds: string[] = response.data.resultIds;
         setNextPageQuery(response.data.next);
         fetchDogDetails(dogIds);
+      } else if (response.status === 401) {
+        navigate('/login');
       } else {
         console.error('Failed to fetch dog IDs. Status:', response.status);
       }
@@ -150,6 +153,8 @@ const DogList: React.FC = () => {
       setIsLoading(false);
     }
   }
+  
+
   
 
   async function fetchDogDetails(dogIds: string[]) {
@@ -176,18 +181,12 @@ const DogList: React.FC = () => {
 
   
   const handleFilterSort = (searchParams: DogSearchParams) => {
-    // Update the filterCriteria state with the provided search parameters
+    // Update the filterCriteria state in the context with the provided search parameters
     setFilterCriteria(searchParams);
-    console.log('searchParams:', searchParams);
-    console.log('Breeds:', searchParams.breeds);
-    console.log('Zip Codes:', searchParams.zipCodes);
-    console.log('Age Min:', searchParams.ageMin);
-    console.log('Age Max:', searchParams.ageMax);
-  
-    // Call fetchDogIds with the filter parameters
-    fetchDogIds(sortOrder, pageSize, currentPage, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
+
+    // Pass the updated searchParams to fetchDogIds
+    fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
   };
-  
   
 /*  const handleLocation = async (searchLocParams: LocSearchParams) => {
    
@@ -197,43 +196,31 @@ const DogList: React.FC = () => {
 
   const handleLocation = async (searchLocParams: LocSearchParams) => {
     try {
-      // Define the request body based on the provided searchLocParams
       const requestBody: any = {
-        city: searchLocParams.city, // Set the city parameter
+        city: searchLocParams.city,
       };
-  
-      // Check if there are items in the states array before setting it
+
       if (searchLocParams.states && searchLocParams.states.length > 0) {
-        requestBody.states = searchLocParams.states; // Set the states parameter (an array of two-letter state/territory abbreviations)
+        requestBody.states = searchLocParams.states;
       }
-  
-      // Add other parameters as needed (e.g., geoBoundingBox, size, from)
-  
-      console.log(requestBody);
-  
-      // Make the POST request to /locations/search
+
       const response = await axios.post('https://frontend-take-home-service.fetch.com/locations/search', requestBody, {
-        withCredentials: true, // Include credentials if required
+        withCredentials: true,
       });
-  
+
       if (response.status === 200) {
-        // Handle the response data, which contains the results
         const searchResults = response.data.results;
         const totalResults = response.data.total;
-  
-        console.log('Location search results:', searchResults);
-        console.log('Total results:', totalResults);
 
         const zipCodes = searchResults.map((result: any) => result.zip_code);
-      console.log('Zip Codes:', zipCodes);
 
-      if (zipCodes.length > 1) {
-        // Call fetchDogIds with the zipCodes array
-        fetchDogIds(sortOrder, pageSize, currentPage, searchParams.breeds, zipCodes, searchParams.ageMin, searchParams.ageMax);
-      }
+        if (zipCodes.length > 1) {
+          // Update the searchParams directly with the retrieved zip codes
+          searchParams.zipCodes = zipCodes;
 
-  
-        // You can further process or display the search results here
+          // Call fetchDogIds with the updated searchParams
+          fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
+        }
       } else {
         console.error('Failed to fetch location search results. Status:', response.status);
       }
@@ -241,6 +228,9 @@ const DogList: React.FC = () => {
       console.error('An error occurred during location search:', error);
     }
   };
+
+
+
   
   
 
@@ -274,35 +264,23 @@ const DogList: React.FC = () => {
     }
   }
 
-  /*const handleFindMatch = async () => {
-    const dogIds = dogs.map((dog) => dog.id); // Assuming 'dogs' is your array of dogs
-
-    const matchedDog = await fetchMatchedDog(dogIds);
-    
-
-    if (matchedDog) {
-      // You can now display or handle the matched dog as needed
-      console.log('Matched dog ID:', matchedDog);
-    }
-  }; */
 
   const notify = () => toast("Wow so easy!");
 
   const handleFindMatch = async (favoriteDogIds: string[]) => {
-    // Randomly select a dog ID from the favoriteDogIds array
     if (favoriteDogIds.length < 1) {
-      toast("Add dogs to your favorites' list first"); // Display a toast message
+      toast("Add dogs to your favorites' list first"); 
       return; 
     }
     const randomIndex = Math.floor(Math.random() * favoriteDogIds.length);
     const matchedDogId = favoriteDogIds[randomIndex];
   
-    // Call fetchMatchedDog with the randomly selected dog ID
+
     const matchedDog = await fetchMatchedDog([matchedDogId]);
     
   
     if (matchedDog) {
-      // You can now display or handle the matched dog as needed
+
       console.log('Matched dog ID:', matchedDog);
     }
   };
@@ -312,15 +290,15 @@ const DogList: React.FC = () => {
   const loadNextPage = () => {
     if (nextPageQuery) {
       setCurrentPage((prevPage) => prevPage + 1);
-      // Pass the current sortOrder to fetch the next page with the same sorting order
-      fetchDogIds(sortOrder, pageSize, currentPage + 1, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
+  
+      fetchDogIds(searchParams, sortOrder, pageSize, currentPage+1);
     }
   };
 
   const loadPrevPage = () => {
     if (nextPageQuery) {
       setCurrentPage((prevPage) => prevPage - 1);
-      fetchDogIds(sortOrder, pageSize, currentPage - 1, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
+      fetchDogIds(searchParams, sortOrder, pageSize, currentPage-1);
     }
   };
 
@@ -341,6 +319,11 @@ const DogList: React.FC = () => {
   return (
      <div className='listContainer'>
       <h2>Find your next friend!</h2>
+      {favCounter > 0 && 
+        <div style={{ marginTop: 20}}>
+          <h4><AiFillHeart size={40} color='red'/>: {favCounter}</h4>
+        </div>
+      }
       <div className='filtersBox'>
         <div className="mb-3">
           <DogSearch onFilterSort={handleFilterSort} />
@@ -379,7 +362,7 @@ const DogList: React.FC = () => {
                 onClick={() => {
                   const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
                   setSortOrder(newSortOrder);
-                  fetchDogIds(newSortOrder, pageSize, currentPage, searchParams.breeds, searchParams.zipCodes, searchParams.ageMin, searchParams.ageMax);
+                  fetchDogIds(searchParams, sortOrder, pageSize, currentPage);
                 }}
                 variant="dark"
               >

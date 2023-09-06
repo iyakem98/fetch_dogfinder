@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Import the Dog type
 interface Dog {
   id: string;
   img: string;
@@ -20,12 +19,12 @@ const MatchedDog: React.FC<DogDetailsCardProps> = ({ dogId }) => {
   const [dogDetails, setDogDetails] = useState<Dog | null>(null);
 
   useEffect(() => {
-    // Fetch details for the specified dog ID when the component mounts
+   
     fetchDogDetails([dogId]);
   }, [dogId]);
 
   async function fetchDogDetails(dogIds: string[]) {
-    // Create an array to store fetched dogs
+    
     const fetchedDogs: Dog[] = [];
 
     try {
@@ -39,10 +38,10 @@ const MatchedDog: React.FC<DogDetailsCardProps> = ({ dogId }) => {
 
       if (dogResponse.status === 200) {
         console.log('Details fetched');
-        // Use concat to add the fetched dogs to the array and update state
+      
         const newDogs = fetchedDogs.concat(dogResponse.data);
         console.log('Fetched dogs:', dogResponse.data);
-        setDogDetails(newDogs[0]); // Assuming you expect one dog's details
+        setDogDetails(newDogs[0]); 
       } else {
         console.error('Failed to fetch dog details. Status:', dogResponse.status);
       }

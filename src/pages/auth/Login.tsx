@@ -1,10 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import {Form, Button, Row, Col, Image} from 'react-bootstrap'
 import FormContainer from '../../components/FormContainer/FormContainer'
 import './LoginScreen.css'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import fetchPlain from '../../images/fetch-rewards-plain.png'
 
 interface LoginInfo {
     name?: string,
@@ -28,7 +29,7 @@ const Login = () => {
               'https://frontend-take-home-service.fetch.com/auth/login',
               payload,
               {
-                withCredentials: true, // Include credentials (cookies) with the request
+                withCredentials: true,
               }
             );
 
@@ -52,14 +53,13 @@ const Login = () => {
    
   return (
     <div className='login'>
-        <div className='loginleft bg-primary'>
-
+        <div className='loginleft'>
+        <Image className ='leftLogo' src = {fetchPlain}/>
         </div>
 
         <div className='loginright'>
         <div className='frmcontlogin'>
     <FormContainer>
-        {/* Content of FormContainer */}
         <h1>Log in </h1>
                 <Form onSubmit={handleLogin}>
                 <Form.Group controlId='name' className='frmgrp'>
@@ -88,7 +88,6 @@ const Login = () => {
                         </Form.Control>
                     </Form.Group>
                     
-                    <Link to = '/register' style={{ }} className='text-primary'>I don't have an account</Link>
                     <Button type ='submit' variant = 'primary' className='btn btn-block btn-primary loginbutt'>
                         Log in 
                     </Button>

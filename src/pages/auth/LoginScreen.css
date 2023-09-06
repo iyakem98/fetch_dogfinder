@@ -1,5 +1,5 @@
 .login {
-    padding-top: 65px;
+    /*padding-top: 65px;*/
     display: flex;
     justify-content: space-between;
     height: 834px;
@@ -16,7 +16,15 @@
 
 .loginleft{
     width: 40%;
+    padding-top: 8%;
+    background-color: #feaa33;
+
     
+}
+
+.leftLogo {
+    width: auto;
+    height: 500px;
 }
 
 .loginright {

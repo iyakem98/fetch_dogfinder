@@ -10,6 +10,7 @@ import Register from './pages/auth/Register';
 import DogList from './pages/dogs/DogList';
 import MatchedDog from './pages/dogs/MatchedDog'
 import NavBar from './components/navbar/NavBar';
+import { FilterProvider } from './context/FilterContext';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
@@ -17,18 +18,21 @@ import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
 function App() {
   const [dogId, setDogId] = useState('');
   return (
-    <div className="App">
-      <ToastContainer />
-      <Router>
-        <NavBar/>
-       <Routes>
-         <Route path = "/login" element= {<Login/>}/>
-         <Route path = "/register" element= {<Register/>}/>
-         <Route path = "/dogs" element= {<DogList/>}/>
-         <Route path="/match/:dogId" element={<MatchedDog dogId={dogId}/>} />
-       </Routes>
-     </Router>
-    </div>
+    <FilterProvider>
+      <div className="App">
+            <ToastContainer />
+            <Router>
+              <NavBar/>
+            <Routes>
+              <Route path = "/" element= {<Login/>}/>
+              <Route path = "/register" element= {<Register/>}/>
+              <Route path = "/dogs" element= {<DogList/>}/>
+              <Route path="/match/:dogId" element={<MatchedDog dogId={dogId}/>} />
+            </Routes>
+          </Router>
+          </div>
+    </FilterProvider>
+   
   );
 }
 

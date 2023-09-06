@@ -94,7 +94,7 @@ const Login = () => {
                         </Form.Control>
                     </Form.Group>
                     
-                    <Button type ='submit' variant = 'primary' className='btn btn-block btn-primary loginbutt'>
+                    <Button type ='submit' variant = 'primary' className='btn btn-block btn-primary loginbutt' style={{width: '30vh'}}>
                         Log in 
                     </Button>
                 </Form>

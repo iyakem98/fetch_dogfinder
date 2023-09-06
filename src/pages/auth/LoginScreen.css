@@ -4,6 +4,7 @@
     justify-content: space-between;
     height: 834px;
     color: black;
+    height: 100vh;
 }
 
 .signup {
@@ -18,13 +19,14 @@
     width: 40%;
     padding-top: 8%;
     background-color: #feaa33;
+    height: 100vh;
 
     
 }
 
 .leftLogo {
     width: auto;
-    height: 500px;
+    height: 60vh;
 }
 
 .loginright {
@@ -56,4 +58,8 @@
     width: 70%;
     margin-top: 10px;
     margin-left: 15%;
+}
+
+.frmgrp {
+    width: 60vh;
 }

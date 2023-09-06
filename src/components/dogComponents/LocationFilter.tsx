@@ -1,5 +1,9 @@
-/* This is our location filter component that lets users filter dogs by city or states. It fetched the zipcodes, which are
-then sent to the main fetching API. */
+/*
+"""
+The LocationFilter component serves as a feature for users to filter dogs based on city or state preferences.
+It operates by fetching zip codes, which are subsequently utilized as input for the primary data-fetching API.
+"""
+*/
 import React, { useState } from 'react';
 import { Form, FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap';
 import './LocationFilter.css'

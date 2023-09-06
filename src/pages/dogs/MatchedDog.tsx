@@ -1,6 +1,11 @@
-/* This is the MatchedDog component that is responsible for displaying the dog users are matched with. To do this, 
-users will choose a few dogs as their "favorites" and click on "Find a Match", which picks a random dog out of the 
-ones in the favorites list */
+/*
+"""
+The MatchedDog component is dedicated to showcasing dogs that users have been matched with. This is accomplished by
+users first selecting a set of dogs as their "favorites" and subsequently clicking on the "Find a Match" feature.
+This action randomly selects a dog from the favorites list for display.
+"""
+
+*/
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';

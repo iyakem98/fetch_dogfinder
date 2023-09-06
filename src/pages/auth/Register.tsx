@@ -1,3 +1,4 @@
+/* No API to implement this */
 import React from 'react'
 
 const Register = () => {

@@ -1,4 +1,8 @@
-/* This component enables users to filter the dogs by breed, age, and zip codes. */
+/*
+ """
+This component empowers users with the ability to refine dog listings by breed, age, and zip codes.
+"""
+. */
 
 import React, { useState } from 'react';
 import './DogSearch.css';

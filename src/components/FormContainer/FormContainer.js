@@ -1,3 +1,4 @@
+/* Simple form layout for the forms I use in different components. */
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 

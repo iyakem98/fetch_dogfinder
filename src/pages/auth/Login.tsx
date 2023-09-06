@@ -1,4 +1,9 @@
-/* This is the Login (in our case Home) screen that is routed simply using '/'. I have tried to include some icon-styling here" */
+/* 
+"""
+The Login (or Home) screen is the primary landing page of the application, accessible through the '/' route.
+This screen incorporates icon styling to enhance visual appeal and usability.
+"""
+*/
 import React from 'react'
 import { useState } from 'react'
 import {Form, Button, Row, Col, Image} from 'react-bootstrap'

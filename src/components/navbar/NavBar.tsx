@@ -1,5 +1,11 @@
-/* This is the navigation bar for the app. It is pretty simple; it has three different buttons, Fetch Rewards with icon
-(for Home/Login), Dogs (to render a list of dogs), and Log Out button. */
+/* 
+"""
+This component serves as the navigation bar for the application. It maintains a minimalist design featuring three distinct buttons:
+1. "Fetch Rewards" with an associated icon, which serves as a portal to the Home/Login screen.
+2. "Dogs," which facilitates the rendering of a list of dogs within the application.
+3. A "Log Out" button for user session management.
+"""
+*/
 
 import React from 'react';
 import { Navbar, Nav, NavDropdown, Image, Button } from 'react-bootstrap';

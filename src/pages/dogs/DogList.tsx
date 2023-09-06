@@ -1,7 +1,13 @@
-/* This is the DogList component that is responsible for displaying the list of dogs with or without filters.
-There are different interfaces to handle the dog cards and their properties incluiding, search parameters, location parameters,
-and matching parameters, all of which will be described in their respective components. Note that the states use context
-provider in order to be global so every component can track their changes*/
+/* 
+"""
+The DogList component is responsible for presenting a comprehensive list of dogs, both with and without applied filters.
+It offers distinct interfaces to manage dog cards, their associated properties, search parameters, location parameters,
+and matching criteria. Detailed descriptions of these interfaces can be found in their respective components.
+It's worth noting that the component leverages context providers to ensure the states are globally accessible, enabling
+other components to monitor and react to changes.
+"""
+
+*/
 
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
